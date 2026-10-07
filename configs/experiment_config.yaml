@@ -1,0 +1,120 @@
+# ============================================================================
+# experiment_config.yaml
+# Default configuration for the agent framework.
+#
+# This file documents all available parameters with their defaults and
+# acceptable values. Pass values via CLI flags to override for a specific run.
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Experiment identifiers
+# ----------------------------------------------------------------------------
+
+# Stock ticker symbol to trade.
+# The data loader expects a file named {symbol}-*.parquet in the data/ directory.
+symbol: AAPL
+
+# Cognitive bias persona injected into the agent's system prompt.
+# Options: overconfidence | loss_aversion | herding | conservative |
+#          momentum_chaser | contrarian
+persona: conservative
+
+# Persona injection method.
+# Options:
+#   zero_shot  — system prompt contains only the persona description
+#   one_shot   — system prompt includes one concrete example decision
+#   cot        — system prompt instructs the agent to reason step by step
+method: zero_shot
+
+# ----------------------------------------------------------------------------
+# Model and backend selection
+# ----------------------------------------------------------------------------
+
+# Model identifier string passed to the API or local loader.
+# Examples:
+#   API (OpenAI)    : gpt-4o-mini, gpt-4o, gpt-3.5-turbo
+#   API (Gemini)    : gemini-1.5-pro, gemini-1.5-flash
+#   API (DeepSeek)  : deepseek-chat
+#   Local (HuggingFace): mistralai/Mistral-7B-Instruct-v0.2
+model: gpt-4o-mini
+
+# Inference backend.
+# Options: api | local
+backend: api
+
+# Cloud API provider. Only used when backend=api.
+# Options: openai | gemini | deepseek
+api_provider: openai
+
+# Name of the environment variable that holds the API key.
+# The framework reads os.environ[api_key_env] at runtime.
+# Examples: OPENAI_API_KEY, GEMINI_API_KEY, DEEPSEEK_API_KEY
+api_key_env: OPENAI_API_KEY
+
+# HuggingFace backend label. Used only when backend=local.
+# Informational tag included in output filenames (e.g. "transformers").
+local_backend: ""
+
+# File-system path to the local HuggingFace model.
+# Required when backend=local; ignored otherwise.
+local_model_path: ""
+
+# Torch device for local inference.
+# Options: auto | cuda | cpu | mps
+# "auto" lets accelerate choose the best available device.
+device: auto
+
+# Torch weight dtype for local model loading.
+# Options: float16 | bfloat16 | float32
+# float16 is recommended for GPU inference; float32 for CPU-only.
+torch_dtype: float16
+
+# ----------------------------------------------------------------------------
+# Generation hyperparameters
+# ----------------------------------------------------------------------------
+
+# Maximum number of new tokens the model may generate per trading step.
+max_new_tokens: 512
+
+# Nucleus sampling threshold (top-p).
+# Range: 0.0–1.0. 1.0 disables nucleus filtering.
+top_p: 0.9
+
+# ----------------------------------------------------------------------------
+# Reproducibility
+# ----------------------------------------------------------------------------
+
+# Integer run identifier. Increment for repeated trials under the same
+# experimental condition (same symbol/persona/method/model/seed).
+run_id: 1
+
+# Random seed passed to the model (seed= for OpenAI/DeepSeek,
+# torch.manual_seed for local models).
+# Use different seeds to study variance across runs.
+random_seed: 42
+
+# ----------------------------------------------------------------------------
+# Memory settings
+# ----------------------------------------------------------------------------
+
+# Enable episodic memory backed by ChromaDB + sentence-transformers.
+# When true, past decisions are stored and the most similar prior episode
+# is retrieved and injected into each day's prompt.
+# Options: true | false
+use_memory: false
+
+# Number of past memory records to retrieve per trading step.
+# Only the top-1 retrieved record is injected into the prompt.
+memory_top_k: 1
+
+# Directory for the persistent ChromaDB vector store.
+# Each experimental condition gets its own isolated collection inside this db.
+memory_db_path: ./outputs/memory
+
+# ----------------------------------------------------------------------------
+# Logging
+# ----------------------------------------------------------------------------
+
+# Verbosity level for the Python logging system.
+# Options: DEBUG | INFO | WARNING | ERROR
+log_level: INFO

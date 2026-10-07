@@ -1,0 +1,14 @@
+pandas
+pyarrow
+numpy
+pyyaml
+tqdm
+chromadb
+sentence-transformers
+openai
+google-generativeai
+google-genai
+transformers
+torch
+accelerate
+pandas-market-calendars
