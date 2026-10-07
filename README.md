@@ -15,11 +15,11 @@ One-Shot uses a shared mixed-evidence demonstration with persona-specific decisi
 | `src/` | Main task interface, prompt builder, model clients, and trajectory engine |
 | `data/` | Original AAPL and TSLA input streams |
 | `outputs/trajectories/` | 360 raw main-experiment CSV files: 120 per injection method |
-| `persona_free_baseline/src/` | Task-only baseline and Zero-Shot persona runs; also supports the Qwen2.5 temporal sensitivity check |
-| `matched_one_shot/src/` | Primary One-Shot and demonstration-scenario ablations |
+| `persona_free_baseline/` | Task-only baseline and Zero-Shot persona runs; also supports the Qwen2.5 temporal sensitivity check |
+| `matched_one_shot/` | Primary One-Shot and demonstration-scenario ablations |
 | `bmrn_cross_sector/` | BMRN Zero-Shot code and input parquet |
 | `aapl_r2/` | Second AAPL stream code and input parquet |
-| `persona_paraphrase_robustness/src/` | Two semantically equivalent persona descriptions |
+| `persona_paraphrase_robustness/` | Two semantically equivalent persona descriptions |
 | `SFT/` | Existing supervised-label data and data-preparation code |
 
 The pre-existing Gemini Flash-Lite memory example is separate from the 360 paper trajectories. Supplementary rollout outputs and precomputed statistics are not included.
@@ -64,14 +64,14 @@ These entry points retain the experimental sampling settings (`temperature=1.0`,
 GPT Zero-Shot:
 
 ```bash
-python persona_free_baseline/src/run_one.py \
+python persona_free_baseline/run_one.py \
   --model gpt-5.4-mini --symbol AAPL --persona overconfidence --run-id 1
 ```
 
 Primary One-Shot (change `--model`, stock, persona, and run ID as needed):
 
 ```bash
-python matched_one_shot/src/run_one.py \
+python matched_one_shot/run_one.py \
   --model gpt-5.4-mini --symbol AAPL --persona overconfidence \
   --scenario M --run-id 1
 ```
@@ -101,11 +101,11 @@ For Qwen3-8B, use model tag `Qwen3-8B-nothink`, its corresponding local director
 
 ```bash
 # No-persona baseline
-python persona_free_baseline/src/run_one.py \
+python persona_free_baseline/run_one.py \
   --model gpt-5.4-mini --symbol AAPL --run-id 1
 
 # Positive-evidence demonstration ablation (use N for negative evidence)
-python matched_one_shot/src/run_one.py \
+python matched_one_shot/run_one.py \
   --model gpt-5.4-mini --symbol AAPL --persona herding \
   --scenario P --run-id 1
 
@@ -118,12 +118,12 @@ python aapl_r2/src/run_one.py \
   --model gpt-5.4-mini --symbol AAPL --condition overconfidence --run-id 1
 
 # Persona paraphrase
-python persona_paraphrase_robustness/src/run_one.py \
+python persona_paraphrase_robustness/run_one.py \
   --model gpt-5.4-mini --symbol AAPL --persona overconfidence \
   --paraphrase-version v1_controlled_lexical_substitution --run-id 1
 
 # Temporal sensitivity check
-python persona_free_baseline/src/run_one.py \
+python persona_free_baseline/run_one.py \
   --model qwen2.5-1.5b-instruct --symbol AAPL --run-id 1
 ```
 

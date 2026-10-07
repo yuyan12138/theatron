@@ -11,7 +11,7 @@ from pathlib import Path
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    __package__ = "src"
+    __package__ = "matched_one_shot"
 
 from .common import (
     atomic_temp_path,
@@ -34,7 +34,7 @@ from .prompt import build_prompt, build_system_prompt
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run one frozen matched One-Shot trajectory")
-    parser.add_argument("--model", required=True, help="Model key from src/common.py")
+    parser.add_argument("--model", required=True, help="Model key from common.py")
     parser.add_argument("--condition-index", type=int, choices=range(90))
     parser.add_argument("--symbol", choices=["AAPL", "TSLA"])
     parser.add_argument(

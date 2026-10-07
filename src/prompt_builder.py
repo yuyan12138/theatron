@@ -180,8 +180,8 @@ def build_prompt(
     }:
         if use_memory:
             raise ValueError("The primary One-Shot protocol uses memory disabled.")
-        from matched_one_shot.src.common import load_protocol
-        from matched_one_shot.src.prompt import build_prompt as build_one_shot_prompt
+        from matched_one_shot.common import load_protocol
+        from matched_one_shot.prompt import build_prompt as build_one_shot_prompt
 
         return build_one_shot_prompt(
             row=row,

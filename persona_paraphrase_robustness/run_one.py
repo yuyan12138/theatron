@@ -11,7 +11,7 @@ from pathlib import Path
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    __package__ = "src"
+    __package__ = "persona_paraphrase_robustness"
 
 from .common import (
     all_conditions,
@@ -35,7 +35,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run one frozen Zero-Shot persona-paraphrase trajectory"
     )
-    parser.add_argument("--model", required=True, help="Model key from src/common.py")
+    parser.add_argument("--model", required=True, help="Model key from common.py")
     parser.add_argument("--condition-index", type=int, choices=range(60))
     parser.add_argument("--symbol", choices=["AAPL", "TSLA"])
     parser.add_argument(

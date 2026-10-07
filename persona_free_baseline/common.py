@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parent
 PROTOCOL = {
     "protocol_name": "theatron-persona-free-v1",
     "protocol_version": 1,
@@ -255,5 +255,5 @@ def runtime_versions() -> dict[str, Any]:
 
 
 def code_hashes() -> dict[str, str]:
-    files = sorted((ROOT / "src").glob("*.py"))
+    files = sorted(ROOT.glob("*.py"))
     return {str(path.relative_to(ROOT)): sha256_file(path) for path in files}

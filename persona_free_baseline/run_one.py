@@ -11,7 +11,7 @@ from pathlib import Path
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    __package__ = "src"
+    __package__ = "persona_free_baseline"
 
 from .common import (
     code_hashes,
@@ -32,7 +32,7 @@ from .prompt import build_persona_free_prompt
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run one task-only or Zero-Shot persona trajectory")
-    parser.add_argument("--model", required=True, help="Model key from src/common.py")
+    parser.add_argument("--model", required=True, help="Model key from common.py")
     parser.add_argument("--symbol", required=True, choices=["AAPL", "TSLA"])
     parser.add_argument("--run-id", required=True, type=int, choices=range(1, 6))
     parser.add_argument(
