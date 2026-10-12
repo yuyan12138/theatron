@@ -46,17 +46,12 @@ SFT/
 
 ## 2. Dependencies
 
-Tested with the versions installed in this environment:
-
-| package        | version |
-|----------------|---------|
-| python         | 3.11    |
-| pandas         | 3.x     |
-| numpy          | 2.x     |
-| pyarrow        | 23.x    |
-| transformers   | 5.x     |
-| torch          | 2.x     |
-| openai         | 2.x (only if `--label-provider openai`) |
+The dataset builder requires Python, pandas, NumPy, PyArrow, Hugging Face
+Transformers, and PyTorch. API labeling additionally requires the SDK for
+the selected provider. The installation commands below illustrate setup;
+they do not specify a frozen historical environment. Recorded rollout
+versions and the separate SFT training implementation are described in the
+[repository README](../README.md#implementation-and-recorded-environments).
 
 Optional API SDKs (each only required if you select that provider):
 
@@ -72,7 +67,7 @@ pip install anthropic         # for --label-provider claude
 ## 3. Environment setup
 
 ```bash
-# 1. (Optional) create a fresh venv / conda env with Python 3.11
+# 1. (Optional) example: create a fresh conda env with Python 3.11
 conda create -n persona-sft python=3.11 -y
 conda activate persona-sft
 
@@ -246,8 +241,8 @@ Same rows, same ordering as the JSON (shuffle is applied before both writes).
 - Trading-day calendar is hard-coded for 2025 H1; no runtime calendar
   dependency.
 
-Running the pipeline twice on the same machine, same FinBERT cache, same
-provider yields identical JSON/CSV byte-for-byte.
+The fixed seed controls local sample ordering. API-based labels are not
+guaranteed to be identical across repeated calls, even at temperature zero.
 
 ---
 

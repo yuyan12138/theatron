@@ -59,6 +59,28 @@ Model keys used by the experiment-specific entry points are:
 
 These entry points retain the experimental sampling settings (`temperature=1.0`, `top_p=0.9`) and run-to-seed mapping.
 
+## Implementation and recorded environments
+
+- **Local inference:** [PyTorch](https://pytorch.org/) and [Hugging Face Transformers](https://github.com/huggingface/transformers), using the Qwen chat templates, BF16 weights, `device_map="auto"`, and sampled generation. The thinking and generation settings are listed above.
+- **API inference:** the [OpenAI Python SDK](https://github.com/openai/openai-python) and [Google Gen AI SDK](https://github.com/googleapis/python-genai). Model identifiers and request settings are embedded in the experiment modules.
+- **Data processing:** pandas and PyArrow read the Parquet streams; [pandas-market-calendars](https://github.com/rsheftel/pandas_market_calendars) supplies the `NYSE` session calendar for the rollout loaders. Non-trading-day textual evidence is carried to the next session.
+- **Paper evaluation:** custom NumPy/SciPy routines compute trajectory distances, permutation tests, and bootstrap intervals. Metric definitions and statistical settings are reported in Appendix B; precomputed statistics and analysis scripts are not part of this release.
+
+The following versions were recorded for the primary and demonstration-scenario One-Shot, BMRN, AAPL R2, and persona-paraphrase rollouts. They describe those rollout environments, not a shared version lock for every experiment or the SFT data builder.
+
+| Software | Recorded version |
+|---|---|
+| [Python](https://www.python.org/) | 3.13.11 |
+| PyTorch | 2.9.0 |
+| Hugging Face Transformers | 4.57.3 |
+| [NumPy](https://numpy.org/) | 2.2.6 |
+| [pandas](https://pandas.pydata.org/) | 2.3.3 |
+| [PyArrow](https://arrow.apache.org/docs/python/) | 22.0.0 |
+| pandas-market-calendars | 5.3.2 |
+| [SciPy](https://scipy.org/) | 1.16.3 |
+| OpenAI Python SDK | 2.14.0 |
+| Google Gen AI SDK (`google-genai`) | 2.6.0 |
+
 ## Main experiment commands
 
 GPT Zero-Shot:
@@ -164,3 +186,7 @@ New executions write outputs under the relevant experiment directory; the main `
 ## SFT data
 
 The existing `SFT/` files contain GPT-4.1-mini and rule-based labels and their preparation scripts. Data-preparation scripts resolve paths relative to their own directory. See `SFT/README.md` for the labeling format.
+
+For the paper's GPT-4.1-mini teacher labels, [FinBERT (`ProsusAI/finbert`)](https://huggingface.co/ProsusAI/finbert) supplies sentiment features from news and filing texts. The builder averages class probabilities across non-overlapping 510-token chunks and defines net sentiment as positive minus negative. These features condition teacher labeling, rather than entering the fine-tuned Qwen inputs directly. The SFT builder uses its own hard-coded 2025 H1 NYSE holiday calendar, as described in `SFT/README.md`.
+
+Full Qwen3-8B SFT uses [LLaMA-Factory](https://github.com/hiyouga/LlamaFactory) with the `qwen3` template, a 4,096-token cutoff, gradient checkpointing, and [DeepSpeed](https://github.com/deepspeedai/DeepSpeed) ZeRO-3 with CPU optimizer offload. Validation and checkpoint saving occur every 20 steps; the remaining training settings and checkpoint selection are reported in Appendix I. The training checkpoint records Transformers **4.57.1**, separately from the rollout versions above. The `SFT/` directory contains data preparation and labeling artifacts, not the full training framework.
